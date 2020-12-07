@@ -1,0 +1,47 @@
+<p>... Ranking ...</p>
+
+<div class='ranking-body'>
+  <div class='row'>
+    <div class='col-md-2'>Filter by:</div>
+    <div class='col-md-4'>
+      <label>
+        <input type='text'
+               [(ngModel)]='listFilter'/>
+      </label>
+    </div>
+    <div *ngIf='listFilter' class='col-md-6'>
+      <h4>Filtered by: {{listFilter}}</h4>
+    </div>
+  </div>
+  <div class='table-responsive'>
+    <table class="table table-striped" data-cy="team-ranking">
+      <caption>Team ranking</caption>
+      <thead>
+      <tr>
+        <th scope="col">
+          <button class="btn btn-primary" (click)='toggleAcknowledgment()'>{{showAcknowledgment ? 'Hide' : 'Show'}}</button>
+        </th>
+        <th scope="col">Acknowledgment</th>
+        <th scope="col">Name</th>
+        <th scope="col">Team</th>
+        <th scope="col">Points</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr *ngFor="let person of people; index as i">
+        <th scope="row">{{ i + 1 }}</th>
+        <th scope="row">
+          <img *ngIf="person.icon && showAcknowledgment" title="position" alt="position" width="25" height="25"
+               [src]='person.icon'>
+        </th>
+        <td>
+          {{ person.name }}
+        </td>
+        <td><img title="{{ person.team }}" alt="{{ person.team }}" width="25" height="25"
+                 [src]='person.teamIcon'></td>
+        <td>{{ person.points | number }}</td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
