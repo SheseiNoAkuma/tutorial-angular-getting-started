@@ -11,3 +11,8 @@ bower_components
 bin
 obj
 packages
+
+package-lock.json
+
+.idea
+.iml
