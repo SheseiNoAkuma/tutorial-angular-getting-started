@@ -39,7 +39,7 @@
         </td>
         <td><img title="{{ person.team }}" alt="{{ person.team }}" width="25" height="25"
                  [src]='person.teamIcon'></td>
-        <td>{{ person.points | number }}</td>
+        <td><pm-vote [_value]='person.points' (notify)="onValueChange(person, $event)"></pm-vote></td>
       </tr>
       </tbody>
     </table>
