@@ -1,62 +1,44 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
-
-interface People {
-  name: string;
-  icon: string;
-  points: number;
-  team: string;
-  teamIcon: string;
-}
-
-const CHARLIE: People[] = [
-  {
-    name: 'Giorgio',
-    icon: 'assets/images/pill.png',
-    points: 4,
-    team: 'Charlie',
-    teamIcon: 'assets/images/chicken.png'
-  },
-  {
-    name: 'Marco',
-    icon: 'assets/images/cucumber.png',
-    points: 3,
-    team: 'Charlie',
-    teamIcon: 'assets/images/chicken.png'
-  },
-  {
-    name: 'CristianBe',
-    icon: 'assets/images/pill.png',
-    points: 4,
-    team: 'Charlie',
-    teamIcon: 'assets/images/chicken.png'
-  },
-  {
-    name: 'CristianBu',
-    icon: 'assets/images/trophy.png',
-    points: 5,
-    team: 'Charlie',
-    teamIcon: 'assets/images/chicken.png'
-  },
-  {
-    name: 'Claudio',
-    icon: 'assets/images/cucumber.png',
-    points: 3,
-    team: 'Charlie',
-    teamIcon: 'assets/images/chicken.png'
-  }
-];
+import {People, PersonService} from '../services/PersonService';
 
 @Component({
   selector: 'pm-basic-table',
-  templateUrl: './ranking.component.html'
+  templateUrl: './ranking.component.html',
+  providers: [PersonService]
 })
 export class RankingComponent implements OnDestroy, OnInit {
   showAcknowledgment = false;
-  people = CHARLIE.sort((a, b) => b.points - a.points);
-  listFilter: string;
+  people: People[];
+  _listFilter: string;
+  private readonly comparator = (a, b) => b.points - a.points;
+
+
+  constructor(private personService: PersonService) { }
+
+  get listFilter(): string {
+    return this._listFilter;
+  }
+
+  set listFilter(value: string) {
+    this._listFilter = value;
+    this.people = this.performFilter(value);
+  }
 
   toggleAcknowledgment(): void {
     this.showAcknowledgment = !this.showAcknowledgment;
+  }
+
+  performFilter(value: string): People[] {
+    return this.personService.getPerson().filter(p => p.name.toLocaleLowerCase().indexOf(value.toLocaleLowerCase()) !== -1
+      || p.team.toLocaleLowerCase().indexOf(value.toLocaleLowerCase()) !== -1)
+      .sort(this.comparator);
+  }
+
+
+  onValueChange(person: People, points: number): void {
+    console.log('new points for ' + person.name + ' is ' + points);
+    person.points = points;
+    this.people.sort(this.comparator);
   }
 
   ngOnDestroy(): void {
@@ -65,5 +47,6 @@ export class RankingComponent implements OnDestroy, OnInit {
 
   ngOnInit(): void {
     console.log('OnInit init');
+    this.people = this.personService.getPerson().sort(this.comparator);
   }
 }
